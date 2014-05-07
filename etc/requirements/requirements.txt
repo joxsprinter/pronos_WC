@@ -1,0 +1,12 @@
+MySQL-python
+Django==1.6.2
+South==0.8.4
+django-basic-models-behaviors==0.5.0
+django-suit==0.2.7
+gunicorn
+django-autoslug
+django-extensions
+django-ckeditor
+Image
+django-imagekit
+django-treemenus #https://pypi.python.org/pypi/django-treemenus
