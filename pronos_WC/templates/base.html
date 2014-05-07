@@ -1,0 +1,40 @@
+<!doctype html>{% load staticfiles %}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>{% block title %}Pronostics Coupe du monde 2014{% endblock %}</title>
+<link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+<link rel="stylesheet" href="{% static "css/dashboard.css" %}">
+<link rel="stylesheet" href="{% static "css/screen.css" %}">
+<link rel="shortcut icon" href="{% static "images/favicon.png" %}">
+
+<div role="navigation" class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">Pronostics Coupe du monde 2014</a>
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+      <div class="row">
+      		<div class="col-sm-3 col-md-2 sidebar">
+	          <ul class="nav nav-sidebar">
+	            <li><a href="/classement.html">Classement</a></li>
+	            <li><a href="/match.html">Match futurs</a></li>
+	            <li><a href="/resultat.html">Résultats</a></li>
+	          </ul>
+	        </div>
+      		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	  			{% block contents %}
+				
+				{% endblock %}
+			</div>
+	</div>
+</div>
+
+

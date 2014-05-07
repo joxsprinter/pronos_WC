@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block contents %}
+	<h1 class="page-header">Match à venir</h1>
+	<div class="table-responsive">
+		<table class="table table-striped">
+		    {% for match in match_list %}
+		    	<tr>
+		    		<td>{{ match.date }}
+		    		<td class="text-center"><img src="{{ match.equipe1.drapeau_thumbnail.url }}" /> 
+		    		<td class="text-center">{{ match.equipe1.nom }}
+		    		<td class="text-center">{{ match.equipe1_result }} - {{ match.equipe2_result }}
+		    		<td class="text-center">{{ match.equipe2.nom }} 
+		    		<td class="text-center"><img src="{{ match.equipe2.drapeau_thumbnail.url }}" />
+		    {% endfor %} 
+	</div>
+{% endblock contents %} 
