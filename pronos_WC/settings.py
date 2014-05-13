@@ -22,7 +22,7 @@ project_path = lambda *a: os.path.join(PROJECT_ROOT, *a)
 SECRET_KEY = '1(desl5*u)(j4i+f!z*ro=i#8rvx(ht)c)scqu8mwu^bm-=as%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -117,7 +117,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 MEDIA_ROOT = os.path.normpath(os.path.join(BASE_PATH, 'media'))
-MEDIA_URL = 'http://127.0.0.1:8000/media/'
+MEDIA_URL = '/media/'
 
 CKEDITOR_UPLOAD_PATH = MEDIA_ROOT
 
