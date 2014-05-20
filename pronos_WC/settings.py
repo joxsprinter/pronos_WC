@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-
+from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
@@ -60,6 +60,7 @@ THIRD_PARTY_APPS = (
     'profiles',
     'ckeditor',
     'treemenus',
+    'crispy_forms',
 )    
 
 PROJECT_APPS = (
@@ -133,3 +134,12 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'Full',
     },
 }
+
+AUTH_PROFILE_MODULE = 'profiles.UserProfile'
+AUTH_USER_MODEL = 'football.User'
+
+LOGIN_URL = 'pronos_WC_login'
+LOGOUT_URL = 'pronos_WC_logout'
+LOGIN_REDIRECT_URL = '/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
