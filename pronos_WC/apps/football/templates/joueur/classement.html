@@ -9,12 +9,12 @@
 				<th>Points
 
 
-		    {% for joueur in joueur_list %}
+		    {% for user in user_list %}
 		    	<tr>
 		    		<td>{{ forloop.counter }}
-		    		<td>{{ joueur.nom }}
-		    		<td>{{ joueur.prenom }}
-		    		<td>{{ joueur.points }}
+		    		<td>{{ user.last_name }}
+		    		<td>{{ user.first_name }}
+		    		<td>{{ user.points }}
 		    {% endfor %} 
 	</div>
 
