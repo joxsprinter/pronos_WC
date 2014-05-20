@@ -15,18 +15,18 @@ class EquipeAdmin(admin.ModelAdmin):
 
 
 class MatchAdmin(admin.ModelAdmin):
-	list_display = ('vs', 'score','nb_pronostic')
+	list_display = ('vs', 'score','nb_pronostic', 'traite')
 
 
 class PronosticAdmin(admin.ModelAdmin):
     list_display = ('joueur','match','score')
 
 class JoueurAdmin(admin.ModelAdmin):
-    list_display = ('nom','prenom','points')
+    list_display = ('last_name','first_name','points')
 
 
 
 admin.site.register(models.Match, MatchAdmin)
 admin.site.register(models.Equipe, EquipeAdmin)
 admin.site.register(models.Pronostic, PronosticAdmin)
-admin.site.register(models.Joueur, JoueurAdmin)
+admin.site.register(models.User, JoueurAdmin)
