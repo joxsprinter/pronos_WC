@@ -18,23 +18,42 @@
       </button>
       <a href="/" class="navbar-brand">Pronostics Coupe du monde 2014</a>
     </div>
+    <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+    			<li><a href="{% url 'pronos_WC_logout' %}">Welcome, {{ user.first_name }} </a> <li><a href="{% url 'pronos_WC_logout' %}">Déconnexion</a>
+    		{% else %}
+			    <li><a href="{% url 'pronos_WC_login' %}">Connexion</a>
+			{% endif %}
+          </ul>
+        </div>
   </div>
 </div>
-<div class="container-fluid">
-      <div class="row">
-      		<div class="col-sm-3 col-md-2 sidebar">
+{% if user.is_authenticated %}
+	<div class="container-fluid">
+	  <div class="row">
+	  		<div class="col-sm-3 col-md-2 sidebar">
 	          <ul class="nav nav-sidebar">
 	            <li><a href="{% url 'classement' %}">Classement</a></li>
-                <li><a href="{% url 'match' %}">Match futurs</a></li>
-                <li><a href="{% url 'resultat' %}">Résultats</a></li>
+	            <li><a href="{% url 'match' %}">Match futurs</a></li>
+	            <li><a href="{% url 'resultat' %}">Résultats</a></li>
+	            <li><a href="{% url 'pronostics' %}">Mes pronostics</a></li>
 	          </ul>
 	        </div>
-      		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	  		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	  			{% block contents %}
 				
 				{% endblock %}
 			</div>
 	</div>
-</div>
+	</div>
+{% else %}
+	<div class="container-fluid">
+		{% block contents_connexion %}
+		
+		{% endblock %}
+	</div>
+{% endif %}
+
 
 
