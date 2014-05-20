@@ -7,16 +7,15 @@ from imagekit.models import ProcessedImageField
 from imagekit.models import ImageSpecField
 from imagekit.processors import Adjust, ResizeToFill, SmartCrop
 from django.contrib.auth.models import User, AbstractUser
+from django import forms
 
-class Joueur(models.Model):
-	nom = models.CharField(max_length=255)
-	prenom = models.CharField(max_length=255)
+
+class User(AbstractUser):
 	mobile = models.CharField(max_length=16, blank=True, null=True)
-	email = models.EmailField(blank=True, null=True)
 	points = models.PositiveIntegerField(blank=True, null=True)
 
 	def __str__(self):
-		return self.nom+' '+self.prenom
+		return self.last_name+' '+self.first_name
 
 
 class Equipe(models.Model):
@@ -73,7 +72,7 @@ class Match(models.Model):
 			pronostics = Pronostic.objects.filter(match_id=self.id)
 			for pronostic in pronostics:
 				if (self.equipe1_result > self.equipe2_result and pronostic.equipe1_result > pronostic.equipe2_result) or (self.equipe1_result < self.equipe2_result and pronostic.equipe1_result < pronostic.equipe2_result) or (self.equipe1_result == self.equipe2_result and pronostic.equipe1_result == pronostic.equipe2_result):
-					joueur = Joueur.objects.filter(id=pronostic.joueur_id)[0]
+					joueur = User.objects.filter(id=pronostic.joueur_id)[0]
 					joueur.points = joueur.points + 4
 					joueur.save()
 			self.traite = True
@@ -84,16 +83,21 @@ class Match(models.Model):
 	vs.short_description = 'Confrontation'
 
 	def nb_pronostic(self):
-		return "%d / %d" % (Pronostic.objects.filter(match_id=self.id).count(), Joueur.objects.count()) 
+		return "%d / %d" % (Pronostic.objects.filter(match_id=self.id).count(), User.objects.count()) 
 	nb_pronostic.short_description = 'Nombre de pronostics'
 
 	@property
 	def score(self):
 	    return ("%s - %s" % (self.equipe1_result, self.equipe2_result))
 
+	@property
+	def getPronosticUserIds(self):
+		pronosticUserIds = Pronostic.objects.filter(match_id=self.id).values_list('joueur_id', flat=True)
+		return pronosticUserIds
+
 
 class Pronostic(models.Model):
-	joueur = models.ForeignKey(Joueur)
+	joueur = models.ForeignKey(User)
 	match = models.ForeignKey(Match)
 	equipe1_result = models.PositiveIntegerField(blank=True, null=True)
 	equipe2_result = models.PositiveIntegerField(blank=True, null=True)
