@@ -11,10 +11,8 @@ class Migration(SchemaMigration):
         # Adding model 'Joueur'
         db.create_table(u'football_joueur', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('nom', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('prenom', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
             ('mobile', self.gf('django.db.models.fields.CharField')(max_length=16, null=True, blank=True)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, null=True, blank=True)),
             ('points', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
         ))
         db.send_create_signal(u'football', ['Joueur'])
@@ -31,10 +29,12 @@ class Migration(SchemaMigration):
         # Adding model 'Match'
         db.create_table(u'football_match', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('niveau', self.gf('django.db.models.fields.CharField')(default=u'Match de poule', max_length=20)),
             ('equipe1', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'equipe1_content_type', to=orm['football.Equipe'])),
             ('equipe2', self.gf('django.db.models.fields.related.ForeignKey')(related_name=u'equipe2_content_type', to=orm['football.Equipe'])),
             ('equipe1_result', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
             ('equipe2_result', self.gf('django.db.models.fields.PositiveIntegerField')(null=True, blank=True)),
+            ('traite', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('date', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
         ))
         db.send_create_signal(u'football', ['Match'])
@@ -109,7 +109,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'football.equipe': {
-            'Meta': {'object_name': 'Equipe'},
+            'Meta': {'ordering': "[u'poule', u'nom']", 'object_name': 'Equipe'},
             'drapeau': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'nom': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -117,12 +117,10 @@ class Migration(SchemaMigration):
         },
         u'football.joueur': {
             'Meta': {'object_name': 'Joueur'},
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'mobile': ('django.db.models.fields.CharField', [], {'max_length': '16', 'null': 'True', 'blank': 'True'}),
-            'nom': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'points': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'prenom': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         },
         u'football.match': {
             'Meta': {'object_name': 'Match'},
@@ -131,7 +129,9 @@ class Migration(SchemaMigration):
             'equipe1_result': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
             'equipe2': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'equipe2_content_type'", 'to': u"orm['football.Equipe']"}),
             'equipe2_result': ('django.db.models.fields.PositiveIntegerField', [], {'null': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'niveau': ('django.db.models.fields.CharField', [], {'default': "u'Match de poule'", 'max_length': '20'}),
+            'traite': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
         },
         u'football.pronostic': {
             'Meta': {'unique_together': "((u'joueur', u'match'),)", 'object_name': 'Pronostic'},

@@ -8,14 +8,29 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import Adjust, ResizeToFill, SmartCrop
 from django.contrib.auth.models import User, AbstractUser
 from django import forms
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
-class User(AbstractUser):
+class Joueur(models.Model):
+	user = models.OneToOneField(User)
 	mobile = models.CharField(max_length=16, blank=True, null=True)
 	points = models.PositiveIntegerField(blank=True, null=True)
 
 	def __str__(self):
-		return self.last_name+' '+self.first_name
+		return self.user.last_name+' '+self.user.first_name
+
+	def nom(self):
+	    return ("%s  %s" % (self.user.last_name, self.user.first_name))
+	nom.short_description = 'Joueur'
+
+@receiver(post_save, sender=User)
+def create_joueur(sender, instance, signal, created, **kwargs):
+    if created:
+        instance.joueur = Joueur()
+	instance.joueur.points = 0
+        instance.joueur.save()
+        instance.save()
 
 
 class Equipe(models.Model):
@@ -44,6 +59,9 @@ class Equipe(models.Model):
 	def __str__(self):
 		return self.nom
 
+	def __unicode__(self):
+   		return u'%s' % (self.nom)
+
 	class Meta:
 		ordering = ['poule','nom']
 
@@ -67,13 +85,26 @@ class Match(models.Model):
 	def __str__(self):
 		return self.equipe1.nom+' - '+self.equipe2.nom
 
+	def __unicode__(self):
+   		return u'%s - %s' % (self.equipe1.nom,self.equipe2.nom)
+
 	def save(self, *args, **kwargs):
 		if self.equipe1_result is not None and self.equipe2_result is not None and self.traite == False:
 			pronostics = Pronostic.objects.filter(match_id=self.id)
 			for pronostic in pronostics:
+				points_sup = 0
 				if (self.equipe1_result > self.equipe2_result and pronostic.equipe1_result > pronostic.equipe2_result) or (self.equipe1_result < self.equipe2_result and pronostic.equipe1_result < pronostic.equipe2_result) or (self.equipe1_result == self.equipe2_result and pronostic.equipe1_result == pronostic.equipe2_result):
-					joueur = User.objects.filter(id=pronostic.joueur_id)[0]
-					joueur.points = joueur.points + 4
+					points_sup = points_sup + 4
+				if self.niveau != "Match de poule":
+					if self.equipe1_result == pronostic.equipe1_result and self.equipe2_result == pronostic.equipe2_result:
+						points_sup = points_sup + 2
+					elif (self.equipe1_result - self.equipe2_result) == (pronostic.equipe1_result - pronostic.equipe2_result):
+						points_sup = points_sup + 1
+
+				if points_sup != 0 :
+					user = User.objects.filter(id=pronostic.joueur_id)[0]
+					joueur = Joueur.objects.filter(user_id=user.id)[0]
+					joueur.points = joueur.points + points_sup
 					joueur.save()
 			self.traite = True
 		super(Match, self).save(*args, **kwargs)

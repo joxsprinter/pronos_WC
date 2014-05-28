@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+
 BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -22,11 +23,11 @@ project_path = lambda *a: os.path.join(PROJECT_ROOT, *a)
 SECRET_KEY = '1(desl5*u)(j4i+f!z*ro=i#8rvx(ht)c)scqu8mwu^bm-=as%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', False)
+DEBUG = os.environ.get('DEBUG', True)
 
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -59,7 +60,6 @@ THIRD_PARTY_APPS = (
     'imagekit',
     'profiles',
     'ckeditor',
-    'treemenus',
     'crispy_forms',
 )    
 
@@ -120,7 +120,6 @@ DATABASES = {
 MEDIA_ROOT = os.path.normpath(os.path.join(BASE_PATH, 'media'))
 MEDIA_URL = '/media/'
 
-CKEDITOR_UPLOAD_PATH = MEDIA_ROOT
 
 STATIC_ROOT = project_path('public', 'static')
 STATIC_URL = '/static/'
@@ -128,7 +127,7 @@ STATICFILES_DIRS = (
     project_path('static'),
 )
 
-
+CKEDITOR_UPLOAD_PATH = MEDIA_ROOT
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Full',
@@ -136,7 +135,6 @@ CKEDITOR_CONFIGS = {
 }
 
 AUTH_PROFILE_MODULE = 'profiles.UserProfile'
-AUTH_USER_MODEL = 'football.User'
 
 LOGIN_URL = 'pronos_WC_login'
 LOGOUT_URL = 'pronos_WC_logout'

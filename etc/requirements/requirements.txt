@@ -9,5 +9,5 @@ django-extensions
 django-ckeditor
 Image
 django-imagekit
-django-treemenus #https://pypi.python.org/pypi/django-treemenus
+django-treemenus
 django-crispy-forms

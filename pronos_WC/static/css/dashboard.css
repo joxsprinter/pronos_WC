@@ -98,3 +98,27 @@ body {
 .score{
   width:75px;
 }
+
+.flag{
+  width:75px;
+}
+
+.name{
+  width:200px;
+}
+
+.button{
+  width:75px;
+}
+
+.separation{
+	width:20px;
+}
+
+#div_id_username input{
+	width : 250px;
+}
+
+#div_id_password input{
+	width : 250px;
+}

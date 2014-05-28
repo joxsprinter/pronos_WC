@@ -1,33 +1,59 @@
 from __future__ import (print_function, division, absolute_import, unicode_literals)
 
 from django.views.generic import TemplateView, ListView, DetailView
-from .models import Match, User, Pronostic
+from .models import Match, User, Pronostic, Joueur
 from django.http import *
 from django.shortcuts import redirect
 from datetime import datetime
 from django.utils.dateformat import DateFormat
+import collections
 
 
 class JoueurClassementView(ListView):
     template_name = 'joueur/classement.html'
-    model = User
+    model = Joueur
 
     def get_queryset(self):
-        return User.objects.order_by('-points')
+        return Joueur.objects.order_by('-points','user__last_name','user__first_name')
 
 class MatchView(ListView):
     template_name = 'match/next.html'
     model = Match
 
-    def get_queryset(self):
-        return Match.objects.order_by('-date').filter(traite=0)
+    def get_context_data(self, **kwargs):
+    	# Call the base implementation first to get a context.
+    	context = super(MatchView, self).get_context_data(**kwargs)
+	listMatch =  Match.objects.order_by('date').filter(date__gt=datetime.today())
+	listMatchByDate={}
+	for match in listMatch:
+		if match.date not in listMatchByDate:
+			listMatchByDate[match.date] = []
+
+		listMatchByDate[match.date].append(match)
+
+	listMatchByDate = collections.OrderedDict(sorted(listMatchByDate.items()))
+    	context['match_list'] = listMatchByDate
+    	return context
 
 class MatchOldView(ListView):
     template_name = 'match/old.html'
     model = Match
 
-    def get_queryset(self):
-        return Match.objects.order_by('-date').filter(traite=1)
+    def get_context_data(self, **kwargs):
+    	# Call the base implementation first to get a context.
+    	context = super(MatchOldView, self).get_context_data(**kwargs)
+	listMatch =  Match.objects.order_by('date').filter(traite=1)
+	listMatchByDate={}
+	for match in listMatch:
+		if match.date not in listMatchByDate:
+			listMatchByDate[match.date] = []
+
+		listMatchByDate[match.date].append(match)
+
+	listMatchByDate = collections.OrderedDict(sorted(listMatchByDate.items()))
+    	context['match_list'] = listMatchByDate
+    	return context
+
 
 class MyPronosticsView(ListView):
     template_name = 'pronostics/list.html'

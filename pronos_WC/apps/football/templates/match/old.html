@@ -1,15 +1,21 @@
 {% extends "base.html" %} {% block contents %}
-	<h1 class="page-header">Match à venir</h1>
+	<h1 class="page-header">Résultats</h1>
 	<div class="table-responsive">
-		<table class="table table-striped">
-		    {% for match in match_list %}
-		    	<tr>
-		    		<td>{{ match.date }}
-		    		<td class="text-center"><img src="{{ match.equipe1.drapeau_thumbnail.url }}" /> 
-		    		<td class="text-center">{{ match.equipe1.nom }}
-		    		<td class="text-center">{{ match.equipe1_result }} - {{ match.equipe2_result }}
-		    		<td class="text-center">{{ match.equipe2.nom }} 
-		    		<td class="text-center"><img src="{{ match.equipe2.drapeau_thumbnail.url }}" />
-		    {% endfor %} 
+		{% for key, matches in match_list.items %}
+		    {{key}}
+		    <table class="table table-striped">
+			{% for match in matches %}
+			    	<tr>
+			    		<td class="text-center flag"><img src="{{ match.equipe1.drapeau_thumbnail.url }}" /></td> 
+			    		<td class="text-center name">{{ match.equipe1.nom }}</td>
+			    		<td class="text-center score">{{ match.equipe1_result }}</td>
+			    		<td class="text-center separation">-</td>
+			    		<td class="text-center score">{{ match.equipe2_result }}</td>
+			    		<td class="text-center name">{{ match.equipe2.nom }}</td>
+			    		<td class="text-center flag"><img src="{{ match.equipe2.drapeau_thumbnail.url }}" /></td>
+				</tr>
+			{% endfor %}
+		    </table><br /><br />
+		{% endfor %}
 	</div>
 {% endblock contents %} 

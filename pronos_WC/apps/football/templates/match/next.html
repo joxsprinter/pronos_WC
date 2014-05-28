@@ -1,41 +1,42 @@
 {% extends "base.html" %} {% block contents %}
-	<h1 class="page-header">Match à venir</h1>
+	<h1 class="page-header">Matchs à venir</h1>
 	<div class="table-responsive">
-		<table class="table table-striped">
-		    {% for match in match_list %}
-		    	{% for prono in match.getPronosticUserIds %}
-		    		{{ prono.joueur_id }}
-		    	{% endfor %} 
-		    	{% if user.pk not in match.getPronosticUserIds %}
-		    		<form action="{% url "pronos_WC_create_pronostic" %}" method="post" accept-charset="utf-8">
-		    		{% csrf_token %}
-		    		<input type="hidden" name="match_id" value="{{ match.id }}" />
-		    	{% endif %}
-		    	<tr>
-		    		<td>{{ match.date }}
-		    		<td class="text-center"><img src="{{ match.equipe1.drapeau_thumbnail.url }}" /> 
-		    		<td class="text-center">{{ match.equipe1.nom }}
-		    		{% if user.pk in match.getPronosticUserIds %}
-		    			<td class="text-center score">
-		    		{% else %}
-		    			<td class="text-center score"><input size="1" type="text" name="equipe1_score" value="" />
-		    		{% endif %}
-		    		<td class="text-center">-
-		    		{% if user.pk in match.getPronosticUserIds %}
-		    			<td class="text-center score">
-		    		{% else %}
-		    			<td class="text-center score"><input size="1" type="text" name="equipe2_score" value="" />
-		    		{% endif %}
-		    		<td class="text-center">{{ match.equipe2.nom }} 
-		    		<td class="text-center"><img src="{{ match.equipe2.drapeau_thumbnail.url }}" />
-		    		{% if user.pk in match.getPronosticUserIds %}
-		    			<td class="text-center">
-		    		{% else %}
-		    			<td class="text-center"><input class="btn btn-default" type="submit" value="Enregistrer mes pronostics" />
-		    		{% endif %}
-		    	{% if user.pk not in match.getPronosticUserIds %}
-		    		</form>
-		    	{% endif %}
-		    {% endfor %} 
+		{% for key, matches in match_list.items %}
+		    {{key}}
+		    <table class="table table-striped">
+			{% for match in matches %}
+				{% if user.pk not in match.getPronosticUserIds %}
+			    		<form action="{% url "pronos_WC_create_pronostic" %}" method="post" accept-charset="utf-8">
+			    		{% csrf_token %}
+			    		<input type="hidden" name="match_id" value="{{ match.id }}" />
+			    	{% endif %}
+			    	<tr>
+			    		<td class="text-center flag"><img src="{{ match.equipe1.drapeau_thumbnail.url }}" /></td> 
+			    		<td class="text-center name">{{ match.equipe1.nom }}</td>
+			    		{% if user.pk in match.getPronosticUserIds %}
+			    			<td class="text-center score">&nbsp;</td>
+			    		{% else %}
+			    			<td class="text-center score"><input size="1" type="text" name="equipe1_score" value="" /></td>
+			    		{% endif %}
+			    		<td class="text-center separation">-</td>
+			    		{% if user.pk in match.getPronosticUserIds %}
+			    			<td class="text-center score">&nbsp;</td>
+			    		{% else %}
+			    			<td class="text-center score"><input size="1" type="text" name="equipe2_score" value="" /></td>
+			    		{% endif %}
+			    		<td class="text-center name">{{ match.equipe2.nom }}</td>
+			    		<td class="text-center flag"><img src="{{ match.equipe2.drapeau_thumbnail.url }}" /></td>
+			    		{% if user.pk in match.getPronosticUserIds %}
+			    			<td class="text-center button"><input disabled class="btn btn-default" type="submit" value="Enregistrer mon pronostic" /></td>
+			    		{% else %}
+			    			<td class="text-center button"><input class="btn btn-default" type="submit" value="Enregistrer mom pronostic" /></td>
+			    		{% endif %}
+			    	{% if user.pk not in match.getPronosticUserIds %}
+			    		</form>
+			    	{% endif %}
+				</tr>
+			{% endfor %}
+		    </table><br /><br />
+		{% endfor %}
 	</div>
 {% endblock contents %} 
